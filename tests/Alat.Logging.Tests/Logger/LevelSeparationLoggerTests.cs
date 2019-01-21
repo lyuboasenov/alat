@@ -40,7 +40,7 @@ namespace Alat.Logging.Tests.Logger {
          }
       }
 
-      protected override Logging.Settings GetLoggerSettings(Appender appender) {
+      protected override Logging.Settings GetLoggerSettings(IAppender appender) {
          return Logging.Settings.FromAppender(Level, appender);
       }
    }

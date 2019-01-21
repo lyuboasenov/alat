@@ -12,7 +12,7 @@ namespace Alat.Logging.Tests.Logger {
          Assert.Empty(Appender.LoggedEntries);
       }
 
-      protected override Logging.Settings GetLoggerSettings(Appender appender) {
+      protected override Logging.Settings GetLoggerSettings(IAppender appender) {
          return Logging.Settings.FromAppender(Level.Off, appender);
       }
    }

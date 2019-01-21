@@ -2,10 +2,10 @@
 using System;
 
 namespace Alat.Logging.Appenders {
-   public class DebugAppender : Appender {
-      public LogEntryFormatter LogEntryFormatter { get; }
+   public class DebugAppender : IAppender {
+      public ILogEntryFormatter LogEntryFormatter { get; }
 
-      public DebugAppender(LogEntryFormatter logEntryFormatter) {
+      public DebugAppender(ILogEntryFormatter logEntryFormatter) {
          LogEntryFormatter = logEntryFormatter ?? throw new ArgumentNullException(nameof(logEntryFormatter));
       }
 

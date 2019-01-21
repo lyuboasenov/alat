@@ -1,22 +1,21 @@
-﻿using Alat.Caching.Services;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using Alat.Caching.Serialization;
+using Alat.Caching.Services;
 
 namespace Alat.Caching { 
    public sealed class FileSystemCacheSettings {
       public string Location { get; }
-      public IFormatter Formatter { get; }
-      public FileSystemService FileSystem { get; }
+      public ISerializer Serializer { get; }
+      public IFileSystemService FileSystem { get; }
 
       public FileSystemCacheSettings(string location) : 
-         this(location, new BinaryFormatter(), new Services.Impl.FileSystemService()) { }
+         this(location, new XmlSerializerAdapter(), new FileSystemService()) { }
 
-      public FileSystemCacheSettings(string location, IFormatter formatter) : 
-         this(location, formatter, new Services.Impl.FileSystemService()) { }
+      public FileSystemCacheSettings(string location, ISerializer serializer) : 
+         this(location, serializer, new FileSystemService()) { }
 
-      public FileSystemCacheSettings(string location, IFormatter formatter, FileSystemService fileSystem) {
+      public FileSystemCacheSettings(string location, ISerializer serializer, IFileSystemService fileSystem) {
          Location = location;
-         Formatter = formatter;
+         Serializer = serializer;
          FileSystem = fileSystem;
       }
    }

@@ -1,30 +1,40 @@
-﻿using Alat.Caching.Services;
+﻿using Alat.Caching.Serialization;
+using Alat.Caching.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Alat.Caching.FileSystem {
-   public class FileSystemCacheStore : SerializingCacheStore {
+   internal class FileSystemCacheStore : SerializingCacheStore {
       private const string ITEMS_DIRECTORY = "items";
       private readonly object lockObj = new object();
-      private string IndexFilePath { get; }
-      private string Location { get; }
-      private IDictionary<string, StreamingCacheItem> Items { get; } = new Dictionary<string, StreamingCacheItem>();
-      private FileSystemService FileSystem { get; }
 
-      public FileSystemCacheStore(FileSystemCacheSettings settings) : base(settings.Formatter) {
+      private KeyValidator KeyValidator { get; } = KeyValidator.GetValidator();
+
+      private IDictionary<string, CacheItemMeta> Items { get; }
+
+      private string IndexFilePath { get; }
+      private XmlSerializer IndexSerializer { get; }
+
+      private string Location { get; }
+      private IFileSystemService FileSystem { get; }
+
+      public FileSystemCacheStore(FileSystemCacheSettings settings) : base(settings.Serializer) {
          Location = settings.Location;
          FileSystem = settings.FileSystem;
 
+         IndexSerializer = new XmlSerializer(typeof(CacheItemMeta[]));
+         Items = new Dictionary<string, CacheItemMeta>();
          IndexFilePath = Path.Combine(Location, "climbing.guide.cache.index");
          FileSystem.EnsureDirectoryExists(Location);
       }
 
-      public override void Clean() {
+      public override void RemoveExpired() {
          lock (lockObj) {
             var keysToRemove = Items.
-               Where(pair => pair.Value.ExpirationDate < DateTime.Now).
+               Where(pair => pair.Value.ExpirationDate < DateTime.UtcNow).
                Select(p => p.Key).ToArray();
 
             foreach (var key in keysToRemove) {
@@ -36,6 +46,8 @@ namespace Alat.Caching.FileSystem {
       }
 
       public override bool Contains(string key) {
+         KeyValidator.ValidateKey(key);
+
          return Items.ContainsKey(key);
       }
 
@@ -43,16 +55,13 @@ namespace Alat.Caching.FileSystem {
          return Items.Count > 0;
       }
 
-      public override void Reset(string key, DateTime dateTime) {
-         if (Contains(key)) {
-            lock (lockObj) {
-               Items[key].ExpirationDate = dateTime;
-               SaveIndex();
-            }
-         }
+      public override void Remove(string key) {
+         Remove(new[] { key });
       }
 
-      public override void Remove(string[] keys) {
+      public override void Remove(IEnumerable<string> keys) {
+         KeyValidator.ValidateKeys(keys);
+
          lock (lockObj) {
             foreach(var key in keys) {
                if (Contains(key)) {
@@ -72,63 +81,59 @@ namespace Alat.Caching.FileSystem {
          }
 
          FileSystem.DeleteDirectory(Path.Combine(Location, ITEMS_DIRECTORY));
+         FileSystem.EnsureDirectoryExists(Path.Combine(Location, ITEMS_DIRECTORY));
       }
 
       public override long GetSize() {
          return FileSystem.GetDirectorySize(Location);
       }
 
-      protected override void Add(StreamingCacheItem cacheItem) {
+      protected override void StoreStreamCacheItem(StreamCacheItem cacheItem) {
+         KeyValidator.ValidateKey(cacheItem.Meta.Key);
+
          lock (lockObj) {
             FileSystem.EnsureDirectoryExists(Path.Combine(Location, ITEMS_DIRECTORY));
             using (var file =
-               FileSystem.GetFileCreateStream(GetFileName(cacheItem.Key))) {
+               FileSystem.GetFileWriteStream(GetFileName(cacheItem.Meta.Key))) {
                cacheItem.Stream.CopyTo(file);
             }
 
-            Items[cacheItem.Key] = cacheItem;
+            Items[cacheItem.Meta.Key] = cacheItem.Meta;
             SaveIndex();
          }
       }
 
-      protected override StreamingCacheItem Find(string key) {
-         StreamingCacheItem streamingCacheItem = null;
+      protected override StreamCacheItem RetrieveStreamCacheItem(string key) {
+         KeyValidator.ValidateKey(key);
+
+         StreamCacheItem streamingCacheItem = null;
          if (Contains(key)) {
-            var item = Items[key];
-            streamingCacheItem = new StreamingCacheItem() {
-               Key = item.Key,
-               Tag = item.Tag,
-               ExpirationDate = item.ExpirationDate,
-               Stream = FileSystem.GetFileReadStream(GetFileName(key))
-            };
+            streamingCacheItem =
+               StreamCacheItem.FromCacheItem(Items[key], FileSystem.GetFileReadStream(GetFileName(key)), true);
          }
 
          return streamingCacheItem;
       }
 
       private void LoadIndex() {
-         System.Xml.Serialization.XmlSerializer reader =
-            new System.Xml.Serialization.XmlSerializer(typeof(Dictionary<string, StreamingCacheItem>));
-
          using (var indexFile = FileSystem.GetFileReadStream(IndexFilePath)) {
             Items.Clear();
-            var loadedItems = (Dictionary<string, StreamingCacheItem>)reader.Deserialize(indexFile);
+            var loadedItems = (CacheItemMeta[])IndexSerializer.Deserialize(indexFile);
             foreach(var item in loadedItems) {
-               Items.Add(item);
+               Items.Add(item.Key, item);
             }
          }
       }
 
       private void SaveIndex() {
-         System.Xml.Serialization.XmlSerializer writer =
-            new System.Xml.Serialization.XmlSerializer(typeof(Dictionary<string, StreamingCacheItem>));
-
          using (var indexFile = FileSystem.GetFileWriteStream(IndexFilePath)) {
-            writer.Serialize(indexFile, Items);
+            IndexSerializer.Serialize(indexFile, Items.Values.ToArray());
          }
       }
 
       private string GetFileName(string key) {
+         KeyValidator.ValidateKey(key);
+
          return Path.Combine(Location, ITEMS_DIRECTORY, key.GetHashCode().ToString());
       }
    }

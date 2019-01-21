@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Alat.Logging.DataConverters {
-   public class ExceptionDataConverter : DataConverter {
+   public class ExceptionDataConverter : IDataConverter {
       public LogEntryData Convert(object obj) {
          if (null == obj) {
             throw new ArgumentNullException(nameof(obj));

@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 
 namespace Alat.Caching.Tests.Mocks {
-   class CacheItemMock : CacheItem {
-      public string Key { get; set; }
-      public string Tag { get; set; }
-      public object Data { get; set; }
-      public DateTime ExpirationDate { get; set; }
+   class CacheItemMock : CacheItem<string> {
 
-      public static IEnumerable<CacheItem> GetMockItems() {
+      public static IEnumerable<CacheItem<string>> GetMockItems() {
          for (int i = 1; i <= 5; i++) {
             yield return new CacheItemMock() {
-               Key = $"key{i}",
-               Tag = $"tag{i}1,tag{i}2,tag{i}3",
+               Meta = new CacheItemMeta() {
+                  Key = $"key{i}",
+                  Tag = $"tag{i}1,tag{i}2,tag{i}3",
+                  ExpirationDate = DateTime.Now.AddMinutes(5)
+               },
                Data = $"Dummy data {i}",
-               ExpirationDate = DateTime.Now.AddMinutes(5)
+               
             };
          }
 
          for (int i = 6; i <= 10; i++) {
             yield return new CacheItemMock() {
-               Key = $"key{i}",
-               Tag = null,
+               Meta = new CacheItemMeta() {
+                  Key = $"key{i}",
+                  Tag = null,
+                  ExpirationDate = DateTime.Now.AddMinutes(5)
+               },
                Data = $"Dummy data {i}",
-               ExpirationDate = DateTime.Now.AddMinutes(5)
             };
          }
       }

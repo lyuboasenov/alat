@@ -13,30 +13,21 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void Default() {
-         
-         Assert.Equal(ExistingKeyValue, Cache.FindData<string>(ExistingKey));
-         Assert.Null(Cache.FindData<string>(NonExistingKey));
+         Testing.Assert.MethodCalled(() => Cache.Retrieve<string>(ExistingKey),
+            "Retrieve", ExistingKey);
       }
 
       [Fact]
       public void NullKey() {
          Assert.Throws<ArgumentNullException>(() => 
-            Cache.FindData<string>(NullValuedKey)
+            Cache.Retrieve<string>(NullValuedKey)
          );
       }
 
       [Fact]
       public void EmptyKey() {
-         Assert.Throws<ArgumentNullException>(() =>
-            Cache.FindData<string>(EmptyValuedKey)
-         );
-      }
-
-
-      [Fact]
-      public void WrongType() {
-         Assert.Throws<InvalidCastException>(() =>
-            Cache.FindData<DateTime>(ExistingKey)
+         Assert.Throws<ArgumentException>(() =>
+            Cache.Retrieve<string>(EmptyValuedKey)
          );
       }
    }

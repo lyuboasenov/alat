@@ -2,8 +2,8 @@
 using System;
 
 namespace Alat.Logging.Appenders {
-   public class VoidAppender : Appender {
-      public LogEntryFormatter LogEntryFormatter { get; }
+   public class VoidAppender : IAppender {
+      public ILogEntryFormatter LogEntryFormatter { get; }
 
       public VoidAppender() {
 

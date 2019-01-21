@@ -48,8 +48,8 @@ namespace Alat.Logging.Tests.LoggerSettings {
       public void FromAppenderConverter() {
          var settings = Logging.Settings.FromAppender(Level,
             new MemorySavingAppender(),
-            new KeyValuePair<Type, DataConverter>[] {
-               new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
+            new KeyValuePair<Type, IDataConverter>[] {
+               new KeyValuePair<Type, IDataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
             });
 
          Assert.Equal(Level, settings.Level);
@@ -78,7 +78,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppenders() {
          var settings = Logging.Settings.FromAppenders(Level,
-            new Appender[] { new MemorySavingAppender() });
+            new IAppender[] { new MemorySavingAppender() });
 
          Assert.Equal(Level, settings.Level);
          Assert.Single(settings.Appenders, (appender) => appender is MemorySavingAppender);
@@ -89,7 +89,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersIncludeStack() {
          var settings = Logging.Settings.FromAppenders(Level,
-            new Appender[] { new MemorySavingAppender() },
+            new IAppender[] { new MemorySavingAppender() },
             true);
 
          Assert.Equal(Level, settings.Level);
@@ -101,8 +101,8 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersToEntryConverter() {
          var settings = Logging.Settings.FromAppenders(Level,
-            new Appender[] { new MemorySavingAppender() },
-            Array.Empty<KeyValuePair<Type, DataConverter>>());
+            new IAppender[] { new MemorySavingAppender() },
+            Array.Empty<KeyValuePair<Type, IDataConverter>>());
 
          Assert.Equal(Level, settings.Level);
          Assert.Single(settings.Appenders, (appender) => appender is MemorySavingAppender);
@@ -113,7 +113,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersMultipleProviders() {
          var settings = Logging.Settings.FromAppenders(Level,
-            new Appender[] { new MemorySavingAppender(), new VoidAppender() });
+            new IAppender[] { new MemorySavingAppender(), new VoidAppender() });
 
          Assert.Equal(Level, settings.Level);
          Assert.NotEmpty(settings.Appenders);
@@ -127,7 +127,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersIncludeStackMultipleProviders() {
          var settings = Logging.Settings.FromAppenders(Level,
-            new Appender[] { new MemorySavingAppender(), new VoidAppender() },
+            new IAppender[] { new MemorySavingAppender(), new VoidAppender() },
             true);
 
          Assert.Equal(Level, settings.Level);
@@ -142,9 +142,9 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersToEntryConverterMultipleProviders() {
          var settings = Logging.Settings.FromAppenders(Level,
-            new Appender[] { new MemorySavingAppender(), new VoidAppender() },
-            new KeyValuePair<Type, DataConverter>[] {
-               new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
+            new IAppender[] { new MemorySavingAppender(), new VoidAppender() },
+            new KeyValuePair<Type, IDataConverter>[] {
+               new KeyValuePair<Type, IDataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
             });
 
          Assert.Equal(Level, settings.Level);
@@ -159,7 +159,7 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersNullLevel() {
          Assert.Throws<ArgumentNullException>(() => 
-            Logging.Settings.FromAppenders(null, new Appender[] { new MemorySavingAppender() }));
+            Logging.Settings.FromAppenders(null, new IAppender[] { new MemorySavingAppender() }));
       }
 
       [Fact]
@@ -170,34 +170,34 @@ namespace Alat.Logging.Tests.LoggerSettings {
       [Fact]
       public void FromAppendersNullConverters() {
          Assert.Throws<ArgumentNullException>(() => 
-            Logging.Settings.FromAppenders(Level, new Appender[] { new MemorySavingAppender()}, null));
+            Logging.Settings.FromAppenders(Level, new IAppender[] { new MemorySavingAppender()}, null));
       }
 
       [Fact]
       public void FromAppendersDuplicateConverters() {
          Assert.Throws<ArgumentException>(() => Logging.Settings.FromAppenders(
             Level, 
-            new Appender[] { new MemorySavingAppender() },
-            new List<KeyValuePair<Type, DataConverter>> {
-               new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter()),
-               new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
+            new IAppender[] { new MemorySavingAppender() },
+            new List<KeyValuePair<Type, IDataConverter>> {
+               new KeyValuePair<Type, IDataConverter>(typeof(string), new DataConverters.ExceptionDataConverter()),
+               new KeyValuePair<Type, IDataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
             }));
       }
 
       [Fact]
       public void FromAppendersEmptyAppenders() {
          Assert.Throws<ArgumentException>(() => 
-            Logging.Settings.FromAppenders(Level, new Appender[] { }, null));
+            Logging.Settings.FromAppenders(Level, new IAppender[] { }, null));
       }
 
       [Fact]
       public void FromAppendersConverterMultipleProvidersEdited() {
-         var appenders = new List<Appender>() {
+         var appenders = new List<IAppender>() {
             new MemorySavingAppender(), new VoidAppender()
          };
 
-         var converters = new List<KeyValuePair<Type, DataConverter>> {
-            new KeyValuePair<Type, DataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
+         var converters = new List<KeyValuePair<Type, IDataConverter>> {
+            new KeyValuePair<Type, IDataConverter>(typeof(string), new DataConverters.ExceptionDataConverter())
          };
 
          var settings = Logging.Settings.FromAppenders(Level,

@@ -1,11 +1,12 @@
 ﻿using Alat.Caching.Tests.Mocks;
+using Alat.Testing.Mocks;
 using System;
 using System.Threading;
 using Xunit;
 
 namespace Alat.Caching.Tests.Cache {
    public class AutoCleanCacheTests {
-      private CacheStore Store { get; }
+      private ICacheStore Store { get; }
       private CleanCallObserver CleanCallObserverInstance { get; }
       private IDisposable CleanCallObserverInstanceHandle { get; }
 
@@ -19,7 +20,7 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void InitialClean() {
-         new Impl.Cache(Store, TimeSpan.FromMilliseconds(500));
+         new Caching.Cache(Store, TimeSpan.FromMilliseconds(500));
          Thread.Sleep(1000);
 
          Assert.True(CleanCallObserverInstance.IsCleanCalled);
@@ -27,7 +28,7 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void Recurent() {
-         new Impl.Cache(Store, TimeSpan.FromMilliseconds(500));
+         new Caching.Cache(Store, TimeSpan.FromMilliseconds(500));
 
          Thread.Sleep(1000);
          Assert.True(CleanCallObserverInstance.IsCleanCalled);
@@ -37,7 +38,7 @@ namespace Alat.Caching.Tests.Cache {
          Assert.True(CleanCallObserverInstance.IsCleanCalled);
       }
 
-      private class CleanCallObserver : IObserver<NotifyingCacheStoreMock.MethodCall> {
+      private class CleanCallObserver : IObserver<MethodCall> {
          public bool IsCleanCalled { get; private set; }
 
          public void Reset() {
@@ -52,8 +53,8 @@ namespace Alat.Caching.Tests.Cache {
             throw new NotImplementedException();
          }
 
-         public void OnNext(NotifyingCacheStoreMock.MethodCall value) {
-            if (value.MethodName == "Clean") {
+         public void OnNext(MethodCall value) {
+            if (value.MethodName == "RemoveExpired") {
                IsCleanCalled = true;
             }
          }

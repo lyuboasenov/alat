@@ -1,5 +1,4 @@
-﻿using Alat.Caching.Tests.Mocks;
-using System;
+﻿using System;
 using Xunit;
 
 namespace Alat.Caching.Tests.Cache {
@@ -11,27 +10,26 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void Default() {
-         var ex = Assert.Throws<AddCalledException>(() =>
-            Cache.Add(Key, Data, Expiration, Tags)
-         );
+         var ex = Assert.Throws<Mocks.MethodCalledException>(() => Cache.Store(Key, Data, Expiration, Tags));
 
-         Assert.Equal(Key, ex.Parameters.Item1);
-         Assert.Equal(Data, ex.Parameters.Item2);
-         Assert.Equal(Tags, ex.Parameters.Item3);
-         Assert.InRange(ex.Parameters.Item4, DateTime.UtcNow.AddMinutes(-1), DateTime.UtcNow.AddMinutes(6));
+         Assert.Equal("Store", ex.Name);
+         Assert.Equal(Key, ex.Parameters[0]);
+         Assert.Equal(Data, ex.Parameters[1]);
+         Assert.Equal(Tags, ex.Parameters[2]);
+         Assert.InRange((DateTime)ex.Parameters[3], DateTime.UtcNow.AddMinutes(-1), DateTime.UtcNow.AddMinutes(6));
       }
 
       [Fact]
       public void NullKey() {
          Assert.Throws<ArgumentNullException>(() =>
-            Cache.Add(null, Data, Expiration, Tags)
+            Cache.Store(null, Data, Expiration, Tags)
          );
       }
 
       [Fact]
       public void EmptyKey() {
-         Assert.Throws<ArgumentNullException>(() =>
-            Cache.Add("", Data, Expiration, Tags)
+         Assert.Throws<ArgumentException>(() =>
+            Cache.Store("", Data, Expiration, Tags)
          );
       }
 
@@ -39,45 +37,47 @@ namespace Alat.Caching.Tests.Cache {
       public void NullData() {
          string nullData = null;
          Assert.Throws<ArgumentNullException>(() =>
-            Cache.Add(Key, nullData, Expiration, Tags)
+            Cache.Store(Key, nullData, Expiration, Tags)
          );
       }
 
       [Fact]
       public void NullTags() {
-         var ex = Assert.Throws<AddCalledException>(() =>
-            Cache.Add(Key, Data, Expiration, null)
+         var ex = Assert.Throws<Mocks.MethodCalledException>(() =>
+            Cache.Store(Key, Data, Expiration, null)
          );
 
-         Assert.Equal(Key, ex.Parameters.Item1);
-         Assert.Equal(Data, ex.Parameters.Item2);
-         Assert.Null(ex.Parameters.Item3);
-         Assert.NotInRange(ex.Parameters.Item4, DateTime.Now.AddMinutes(-1), DateTime.Now.AddMinutes(5));
+         Assert.Equal("Store", ex.Name);
+         Assert.Equal(Key, ex.Parameters[0]);
+         Assert.Equal(Data, ex.Parameters[1]);
+         Assert.Null(ex.Parameters[2]);
+         Assert.NotInRange((DateTime)ex.Parameters[3], DateTime.Now.AddMinutes(-1), DateTime.Now.AddMinutes(5));
       }
 
       [Fact]
       public void TagsNotPassed() {
-         var ex = Assert.Throws<AddCalledException>(() =>
-            Cache.Add(Key, Data, Expiration)
+         var ex = Assert.Throws<Mocks.MethodCalledException>(() =>
+            Cache.Store(Key, Data, Expiration)
          );
 
-         Assert.Equal(Key, ex.Parameters.Item1);
-         Assert.Equal(Data, ex.Parameters.Item2);
-         Assert.Null(ex.Parameters.Item3);
-         Assert.NotInRange(ex.Parameters.Item4, DateTime.Now.AddMinutes(-1), DateTime.Now.AddMinutes(5));
+         Assert.Equal("Store", ex.Name);
+         Assert.Equal(Key, ex.Parameters[0]);
+         Assert.Equal(Data, ex.Parameters[1]);
+         Assert.Null(ex.Parameters[2]);
+         Assert.NotInRange((DateTime)ex.Parameters[3], DateTime.Now.AddMinutes(-1), DateTime.Now.AddMinutes(5));
       }
 
       [Fact]
       public void NegativeExpiration() {
          Assert.Throws<ArgumentException>(() =>
-            Cache.Add(Key, Data, new TimeSpan(-1), Tags)
+            Cache.Store(Key, Data, new TimeSpan(-1), Tags)
          );
       }
 
       [Fact]
       public void ZeroExpiration() {
          Assert.Throws<ArgumentException>(() =>
-            Cache.Add(Key, Data, TimeSpan.Zero, Tags)
+            Cache.Store(Key, Data, TimeSpan.Zero, Tags)
          );
       }
    }

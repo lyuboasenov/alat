@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Alat.Logging {
    public sealed class Settings {
-      public IEnumerable<Appender> Appenders { get; }
-      public IEnumerable<KeyValuePair<Type, DataConverter>> DataConverters { get; }
+      public IEnumerable<IAppender> Appenders { get; }
+      public IEnumerable<KeyValuePair<Type, IDataConverter>> DataConverters { get; }
       public Level Level { get; }
       public bool IncludeStackTrace { get; }
 
-      private Settings(IEnumerable<Appender> appenders,
-         IEnumerable<KeyValuePair<Type, DataConverter>> dataConverters,
+      private Settings(IEnumerable<IAppender> appenders,
+         IEnumerable<KeyValuePair<Type, IDataConverter>> dataConverters,
          Level level,
          bool includeStackTrace) {
 
@@ -49,35 +49,35 @@ namespace Alat.Logging {
       }
 
       public static Settings FromAppender(Level level,
-         Appender appender,
+         IAppender appender,
          bool includeStackTrace = false) {
          return FromAppenders(level, 
-            new Appender[] { appender },
+            new IAppender[] { appender },
             includeStackTrace);
       }
 
       public static Settings FromAppender(Level level,
-         Appender appender,
-         IEnumerable<KeyValuePair<Type, DataConverter>> toLogEntryDataConverters,
+         IAppender appender,
+         IEnumerable<KeyValuePair<Type, IDataConverter>> toLogEntryDataConverters,
          bool includeStackTrace = false) {
          return FromAppenders(level, 
-            new Appender[] { appender },
+            new IAppender[] { appender },
             toLogEntryDataConverters,
             includeStackTrace);
       }
 
       public static Settings FromAppenders(Level level,
-         IEnumerable<Appender> loggerAppenders,
+         IEnumerable<IAppender> loggerAppenders,
          bool includeStackTrace = false) {
          return new Settings(loggerAppenders,
-            Array.Empty<KeyValuePair<Type, DataConverter>>(),
+            Array.Empty<KeyValuePair<Type, IDataConverter>>(),
             level,
             includeStackTrace);
       }
 
       public static Settings FromAppenders(Level level,
-         IEnumerable<Appender> loggerAppenders,
-         IEnumerable<KeyValuePair<Type, DataConverter>> toLogEntryDataConverters,
+         IEnumerable<IAppender> loggerAppenders,
+         IEnumerable<KeyValuePair<Type, IDataConverter>> toLogEntryDataConverters,
          bool includeStackTrace = false) {
          return new Settings(loggerAppenders,
             toLogEntryDataConverters,

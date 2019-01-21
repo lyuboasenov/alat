@@ -16,13 +16,12 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void Default() {
-         var ex = Assert.Throws<RemoveCalledException>(() => Cache.Remove(ValidKeys1));
-         Assert.Equal(ValidKeys1, ex.Parameters);
+         Testing.Assert.MethodCalled(() => Cache.Remove(ValidKeys1), "Remove", ValidKeys1);
       }
 
       [Fact]
       public void ArrayContainingEmptyKey() {
-         Assert.Throws<ArgumentNullException>(() => Cache.Remove(InvalidKeys1));
+         Assert.Throws<ArgumentException>(() => Cache.Remove(InvalidKeys1));
       }
 
       [Fact]
@@ -32,7 +31,7 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void EmptyArray() {
-         Assert.Throws<ArgumentNullException>(() => Cache.Remove(InvalidKeys3));
+         Assert.Throws<ArgumentException>(() => Cache.Remove(InvalidKeys3));
       }
 
       [Fact]
@@ -47,7 +46,7 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void EmptyKey() {
-         Assert.Throws<ArgumentNullException>(() => Cache.Remove(InvalidKeys6));
+         Assert.Throws<ArgumentException>(() => Cache.Remove(InvalidKeys6));
       }
    }
 }

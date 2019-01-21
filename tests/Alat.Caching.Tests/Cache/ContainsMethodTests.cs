@@ -10,8 +10,7 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void Default() {
-         Assert.True(Cache.Contains(ExistingKey));
-         Assert.False(Cache.Contains(NonExistingKey));
+         Testing.Assert.MethodCalled(() => Cache.Contains(ExistingKey), "Contains", ExistingKey);
       }
 
       [Fact]
@@ -23,7 +22,7 @@ namespace Alat.Caching.Tests.Cache {
 
       [Fact]
       public void EmptyKey() {
-         Assert.Throws<ArgumentNullException>(() =>
+         Assert.Throws<ArgumentException>(() =>
             Cache.Contains("")
          );
       }

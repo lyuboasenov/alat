@@ -3,56 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Alat.Caching.Tests.Mocks {
-   internal class ThrowingCacheStoreMock : CacheStore {
-      private readonly IEnumerable<CacheItem> items;
+   internal class ThrowingCacheStoreMock : ThrowingMock, Caching.ICacheStore {
+      private bool AnyTrows { get; }
 
-      public bool CleanCalled { get; set; }
-      public bool RemoveAllCalled { get; set; }
-
-      public List<string> RemovedKeys { get; } = new List<string>();
-
-      public ThrowingCacheStoreMock(IEnumerable<CacheItem> items) {
-         this.items = items;
+      public ThrowingCacheStoreMock(bool anyTrows = false) {
+         AnyTrows = anyTrows;
       }
 
-      public void Add<T>(string key, T data, string tag, DateTime dateTime) {
-         throw new AddCalledException(Tuple.Create(key, data.ToString(), tag, dateTime));
+      public void Store<TData>(CacheItem<TData> item) {
+         MethodCalled(nameof(Store), item.Meta.Key, item.Data.ToString(), item.Meta.Tag, item.Meta.ExpirationDate);
       }
 
       public bool Any() {
-         return items.Any();
-      }
+         if (AnyTrows) {
+            MethodCalled(nameof(Any));
+         }
 
-      public void Clean() {
-         throw new CleanCalledException();
+         return true;
       }
 
       public bool Contains(string key) {
-         return items.Any(i => i.Key == key);
-      }
-
-      public CacheItem Find<T>(string key) {
-         return items.FirstOrDefault(i => i.Key == key);
-      }
-
-      public string FindTag(string key) {
-         return items.FirstOrDefault(i => i.Key == key).Tag;
+         MethodCalled(nameof(Contains), key);
+         return false;
       }
 
       public long GetSize() {
          return 42;
       }
+      public CacheItem<TData> Retrieve<TData>(string key) {
+         MethodCalled(nameof(Retrieve), key);
+         return default(CacheItem<TData>);
+      }
 
-      public void Remove(string[] key) {
-         throw new RemoveCalledException(key);
+      public void Remove(string key) {
+         MethodCalled(nameof(Remove), key);
+      }
+
+      public void Remove(IEnumerable<string> keys) {
+         MethodCalled(nameof(Remove), keys.ToArray());
+      }
+
+      public void RemoveExpired() {
+         MethodCalled(nameof(RemoveExpired));
       }
 
       public void RemoveAll() {
-         throw new RemoveAllCalledException();
-      }
-
-      public void Reset(string key, DateTime dateTime) {
-         throw new ResetCalledException(Tuple.Create(key, dateTime));
+         MethodCalled(nameof(RemoveAll));
       }
    }
 }

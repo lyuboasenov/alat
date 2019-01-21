@@ -7,7 +7,7 @@ namespace Alat.Logging.Tests.Logger {
       protected virtual string Message { get; } = "Default log message";
       protected virtual object MessageObj { get; } = "Default log message object";
       protected MemorySavingAppender Appender { get; }
-      protected Logging.Logger Logger { get; }
+      protected Logging.ILogger Logger { get; }
 
       protected BaseLoggerTest() {
          Appender = GetAppenderMock();
@@ -101,16 +101,16 @@ namespace Alat.Logging.Tests.Logger {
       protected abstract void MessageAssertion(Level level);
       protected abstract void ObjectAssertion(Level level);
 
-      protected virtual Logging.Logger GetLogger() {
+      protected virtual ILogger GetLogger() {
          return GetLogger(GetLoggerSettings(Appender));
       }
 
-      protected virtual Logging.Logger GetLogger(Logging.Settings settings) {
-         return new Impl.Logger(settings);
+      protected virtual ILogger GetLogger(Settings settings) {
+         return new Logging.Logger(settings);
       }
 
-      protected virtual Logging.Settings GetLoggerSettings(Appender appender) {
-         return Logging.Settings.FromAppender(Level.All, appender);
+      protected virtual Settings GetLoggerSettings(IAppender appender) {
+         return Settings.FromAppender(Level.All, appender);
       }
 
       protected static MemorySavingAppender GetAppenderMock() {

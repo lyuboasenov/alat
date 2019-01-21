@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace Alat.Logging.LogEntryFormatters {
-   public class PlainTextFormatter : LogEntryFormatter {
+   public class PlainTextFormatter : ILogEntryFormatter {
 
       private StringBuilder FormatedLogEntry { get; }
 
