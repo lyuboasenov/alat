@@ -14,7 +14,7 @@ namespace Alat.Http.Caching.Sessions {
 
       public void AddKeyToTopFrame(string key) {
          lock (lockObj) {
-            if (Stack.Count > 0) {
+            if (!IsEmpty()) {
                Stack.Peek().Keys.Add(key);
             }
          }
@@ -44,23 +44,13 @@ namespace Alat.Http.Caching.Sessions {
          return !Stack.Any();
       }
 
-      public IEnumerable<SessionFrame> PopUntil(Guid sessionId) {
-         CheckSessionExist(sessionId);
-
-         var result = new List<SessionFrame>();
+      public SessionFrame Pop(Guid sessionId) {
          lock (lockObj) {
-            while (sessionId != Stack.Peek().SessionId) {
-               result.Insert(0, Stack.Pop());
+            if (Stack.Peek().SessionId != sessionId) {
+               throw new ArgumentException("Session not found on the top of the stack");
             }
-            result.Insert(0, Stack.Pop());
-         }
 
-         return result;
-      }
-
-      private void CheckSessionExist(Guid sessionId) {
-         if (!Stack.Any(s => s.SessionId == sessionId)) {
-            throw new ArgumentException("Session not found on the stack");
+            return Stack.Pop();
          }
       }
    }

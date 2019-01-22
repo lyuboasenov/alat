@@ -19,7 +19,7 @@ namespace Alat.Http.Tests.SessionFactory {
       [Fact]
       public void OpenSession() {
          var factory = GetSessionFactory();
-         Assert.NotNull(factory.OpenSession());
+         Assert.Throws<ArgumentException>(() => factory.OpenSession());
 
          var custom = factory.OpenSession(TimeSpan.FromMinutes(5));
          Assert.NotNull(custom);

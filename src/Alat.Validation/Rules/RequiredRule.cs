@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Alat.Validation.Rules {
-   public class RequiredRule : Rule {
+   public class RequiredRule : IRule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 

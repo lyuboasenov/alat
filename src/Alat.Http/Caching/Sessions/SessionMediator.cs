@@ -46,14 +46,12 @@ namespace Alat.Http.Caching.Sessions {
       }
 
       public void CloseSession(Session session) {
-         SessionStack.PopUntil(session.Guid);
+         SessionStack.Pop(session.Guid);
       }
 
       public void AbbandonSession(Session session) {
-         var frames = SessionStack.PopUntil(session.Guid);
-         foreach(var frame in frames) {
-            Cache.Remove(frame.Keys);
-         }
+         var frame = SessionStack.Pop(session.Guid);
+         Cache.Remove(frame.Keys);
       }
    }
 }

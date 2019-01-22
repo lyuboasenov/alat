@@ -89,33 +89,30 @@ namespace Alat.Http.Tests.CachingHandler {
 
          var session = setup.Factory.OpenSession();
 
-         setup.Client.GetAsync("http://dummy.com");
-         setup.Client.GetAsync("http://dummy1.com");
-         setup.Client.GetAsync("http://dummy2.com");
-         Assert.Equal(3, setup.CacheObserver.CalledMethods.Count(cm => cm.MethodName == "Store"));
-         Caching.Sessions.Session session2 = setup.Factory.OpenSession();
          try {
-            setup.Client.GetAsync("http://dummy3.com");
-            setup.Client.GetAsync("http://dummy4.com");
-            Assert.Equal(5, setup.CacheObserver.CalledMethods.Count(cm => cm.MethodName == "Store"));
-            session.Abbandon();
+            setup.Client.GetAsync("http://dummy.com");
+            setup.Client.GetAsync("http://dummy1.com");
+            setup.Client.GetAsync("http://dummy2.com");
+            Assert.Equal(3, setup.CacheObserver.CalledMethods.Count(cm => cm.MethodName == "Store"));
+            Caching.Sessions.Session session2 = setup.Factory.OpenSession();
+            try {
+               setup.Client.GetAsync("http://dummy3.com");
+               setup.Client.GetAsync("http://dummy4.com");
+               Assert.Equal(5, setup.CacheObserver.CalledMethods.Count(cm => cm.MethodName == "Store"));
+
+               Assert.Throws<ArgumentException>(() => session.Abbandon());
+            } finally {
+               session2.Dispose();
+            }
          } finally {
-            Assert.Throws<ArgumentException>(() => session2.Dispose());
+            session.Close();
          }
+
          setup.Client.GetAsync("http://dummy5.com");
          Assert.Equal(5, setup.CacheObserver.CalledMethods.Count(cm => cm.MethodName == "Store"));
          Assert.Contains(setup.CacheObserver.CalledMethods,
             (cm) => cm.MethodName == "Remove" && ((IEnumerable<string>)cm.Parameters[0]).Count() == 2);
-         Assert.Contains(setup.CacheObserver.CalledMethods,
-            (cm) => cm.MethodName == "Remove" && ((IEnumerable<string>)cm.Parameters[0]).Count() == 3);
       }
-
-
-
-
-
-
-
 
       private SetupItems Setup(bool cacheByDefault = false) {
          var cache = new Mocks.NotifyingCacheMock();

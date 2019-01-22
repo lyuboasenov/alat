@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 namespace Alat.Caching {
-   public class Cache {
+   public class Cache : ICache {
       private const int DEFAULT_CLEANUP_TIME_MINUTES = 5;
 
       private KeyValidator KeyValidator { get; } = KeyValidator.GetValidator();

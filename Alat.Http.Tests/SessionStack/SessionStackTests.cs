@@ -53,6 +53,20 @@ namespace Alat.Http.Tests.SessionStack {
          var sessionStack = new Caching.Sessions.SessionStack();
          sessionStack.Push(GetFrame());
          sessionStack.Push(GetFrame());
+         sessionStack.Push(GetFrame());
+         sessionStack.Push(GetFrame());
+         var frame = GetFrame();
+         sessionStack.Push(frame);
+
+         Assert.Equal(frame, sessionStack.Pop(frame.SessionId));
+         Assert.False(sessionStack.IsEmpty());
+      }
+
+      [Fact]
+      public void PushPopNotLastSession() {
+         var sessionStack = new Caching.Sessions.SessionStack();
+         sessionStack.Push(GetFrame());
+         sessionStack.Push(GetFrame());
 
          var frame = GetFrame();
          sessionStack.Push(frame);
@@ -60,8 +74,7 @@ namespace Alat.Http.Tests.SessionStack {
          sessionStack.Push(GetFrame());
          sessionStack.Push(GetFrame());
 
-         Assert.Contains(frame, sessionStack.PopUntil(frame.SessionId));
-         Assert.False(sessionStack.IsEmpty());
+         Assert.Throws<ArgumentException>(() => sessionStack.Pop(frame.SessionId));
       }
 
       [Fact]
@@ -72,7 +85,7 @@ namespace Alat.Http.Tests.SessionStack {
          sessionStack.Push(GetFrame());
          sessionStack.Push(GetFrame());
 
-         Assert.Throws<ArgumentException>(() => sessionStack.PopUntil(Guid.NewGuid()));
+         Assert.Throws<ArgumentException>(() => sessionStack.Pop(Guid.NewGuid()));
          Assert.False(sessionStack.IsEmpty());
       }
 

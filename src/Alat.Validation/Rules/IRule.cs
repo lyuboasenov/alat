@@ -1,5 +1,5 @@
 ﻿namespace Alat.Validation.Rules {
-   public interface Rule {
+   public interface IRule {
       string ErrorMessage { get; }
       bool IsValid { get; }
       void Validate(string key, object value);

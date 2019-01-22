@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace Alat.Validation.Rules {
-   public class CompareRule : Rule {
+   public class CompareRule : IRule {
       public string ErrorMessage { get; private set; }
       public bool IsValid { get; private set; }
 

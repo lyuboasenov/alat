@@ -1,5 +1,10 @@
 ﻿namespace Alat.Validation {
-   public interface ValidationContextFactory {
-      ValidationContext GetContextFor(Validatable target, bool autoValidate = false);
+   public class ValidationContextFactory : IValidationContextFactory {
+      public IValidationContext GetContextFor(IValidatable target, bool autoValidate = false) {
+         var context = new ValidationContext(target, autoValidate);
+         target.InitializeValidationRules(context);
+
+         return context;
+      }
    }
 }
