@@ -21,13 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat.Caching.Tests", "tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat.Logging.Tests", "tests\Alat.Logging.Tests\Alat.Logging.Tests.csproj", "{5A32455B-5FAA-4DA4-AFBA-A3EFBF857369}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat.Caching.Sqlite", "Alat.Caching.Sqlite\Alat.Caching.Sqlite.csproj", "{397C9DCE-8174-4F80-9004-5A5130991DF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat.Caching.Sqlite", "src\Alat.Caching.Sqlite\Alat.Caching.Sqlite.csproj", "{397C9DCE-8174-4F80-9004-5A5130991DF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat", "Alat\Alat.csproj", "{BBD03269-54A0-4505-8C16-E99C0FDEA34C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat", "src\Alat\Alat.csproj", "{BBD03269-54A0-4505-8C16-E99C0FDEA34C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat.Http.Tests", "Alat.Http.Tests\Alat.Http.Tests.csproj", "{E4FC7232-D13C-431F-9063-DA8F3BCB813C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alat.Http.Tests", "tests\Alat.Http.Tests\Alat.Http.Tests.csproj", "{E4FC7232-D13C-431F-9063-DA8F3BCB813C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alat.Testing", "Alat.Testing\Alat.Testing.csproj", "{311B5026-241A-4967-97DD-F7D99FE55C0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alat.Testing", "tests\Alat.Testing\Alat.Testing.csproj", "{311B5026-241A-4967-97DD-F7D99FE55C0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

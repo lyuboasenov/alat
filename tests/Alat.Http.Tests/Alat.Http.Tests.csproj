@@ -20,8 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Alat.Http\Alat.Http.csproj" />
+    <ProjectReference Include="..\..\src\Alat\Alat.csproj" />
     <ProjectReference Include="..\Alat.Testing\Alat.Testing.csproj" />
-    <ProjectReference Include="..\src\Alat.Http\Alat.Http.csproj" />
   </ItemGroup>
 
 </Project>

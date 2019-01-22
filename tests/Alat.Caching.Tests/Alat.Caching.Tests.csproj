@@ -16,10 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Alat.Caching.Sqlite\Alat.Caching.Sqlite.csproj" />
-    <ProjectReference Include="..\..\Alat.Testing\Alat.Testing.csproj" />
-    <ProjectReference Include="..\..\Alat\Alat.csproj" />
+    <ProjectReference Include="..\..\src\Alat.Caching.Sqlite\Alat.Caching.Sqlite.csproj" />
     <ProjectReference Include="..\..\src\Alat.Caching\Alat.Caching.csproj" />
+    <ProjectReference Include="..\..\src\Alat\Alat.csproj" />
+    <ProjectReference Include="..\Alat.Testing\Alat.Testing.csproj" />
   </ItemGroup>
 
 </Project>

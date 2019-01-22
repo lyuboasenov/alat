@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Alat\Alat.csproj" />
+    <ProjectReference Include="..\..\src\Alat\Alat.csproj" />
   </ItemGroup>
 
 </Project>

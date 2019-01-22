@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.1</Version>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+	<Version>0.0.1</Version>
     <Authors>Lyuboslav Asenov</Authors>
     <Company>Lyuboslav Asenov</Company>
     <RepositoryUrl>https://github.com/lyuboasenov/alat</RepositoryUrl>
@@ -11,13 +13,18 @@
     <PackageProjectUrl>https://github.com/lyuboasenov/alat</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/lyuboasenov/alat/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\output\</OutputPath>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Alat.Caching\Alat.Caching.csproj" />
+    <ProjectReference Include="..\Alat.Caching\Alat.Caching.csproj" />
   </ItemGroup>
+  
 
 </Project>
