@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>0.0.2.0</AssemblyVersion>
+    <Version>0.0.2</Version>
+    <Authors>Lyuboslav Asenov</Authors>
+    <PackageLicenseUrl>https://github.com/lyuboasenov/alat/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/lyuboasenov/alat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lyuboasenov/alat</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\output\</OutputPath>
+  </PropertyGroup>
 </Project>
