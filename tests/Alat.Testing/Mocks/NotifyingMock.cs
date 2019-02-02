@@ -15,7 +15,7 @@ namespace Alat.Testing.Mocks {
             observers.Add(observer);
          }
 
-         return new Unsubscriber<MethodCall>(observers, observer);
+         return new Unsubscriber<IObserver<MethodCall>>(observers, observer);
       }
 
       protected void MethodCalled(string name, params object[] parameters) {
