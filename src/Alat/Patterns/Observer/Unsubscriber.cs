@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 
 namespace Alat.Patterns.Observer {
-   public sealed class Unsubscriber<T> : IDisposable {
-      private IList<IObserver<T>> observers;
-      private readonly IObserver<T> observer;
+   public sealed class Unsubscriber<TObserver> : IDisposable {
+      private IList<TObserver> observers;
+      private readonly TObserver observer;
 
-      public Unsubscriber(IList<IObserver<T>> observers, IObserver<T> observer) {
+      public Unsubscriber(IList<TObserver> observers, TObserver observer) {
          this.observers = observers;
          this.observer = observer;
       }
