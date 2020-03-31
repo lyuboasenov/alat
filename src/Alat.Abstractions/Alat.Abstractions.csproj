@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-     <VersionPrefix>0.1.0</VersionPrefix>
-     <PackageOutputPath>../../../nuget-local</PackageOutputPath>
+     <Version>0.2.0</Version>
+     <Description>Common abstractions to aid in testing</Description>
+     <Authors>lyubo.asenov</Authors>
+     <RepositoryUrl>https://github.com/lyuboasenov/alat</RepositoryUrl>
   </PropertyGroup>
 
 </Project>

@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
      <Version>0.2.0</Version>
+     <Description>In process command bus library</Description>
+     <Authors>lyubo.asenov</Authors>
+     <RepositoryUrl>https://github.com/lyuboasenov/alat</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
