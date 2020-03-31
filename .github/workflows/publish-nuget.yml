@@ -1,0 +1,37 @@
+name: publish to nuget
+on:
+  push:
+    branches:
+      - master # Default release branch
+jobs:
+  publish:
+    name: list on nuget
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Required for a specific dotnet version that doesn't come with ubuntu-latest / windows-latest
+      # Visit bit.ly/2synnZl to see the list of SDKs that are pre-installed with ubuntu-latest / windows-latest
+      # - name: Setup dotnet
+      #   uses: actions/setup-dotnet@v1
+      #   with:
+      #     dotnet-version: 3.1.100
+      
+      # Publish
+      - name: Publish NuGet
+        uses: rohith/publish-nuget@v2.2.0
+        with:
+          # Filepath of the project to be packaged, relative to root of repository
+          PROJECT_FILE_PATH: src/Alat.CommandBus/Alat.CommandBus.csproj
+          # API key for the NuGet feed
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}} # optional
+      
+      # Publish
+      - name: Publish NuGet
+        uses: rohith/publish-nuget@v2.2.0
+        with:
+          # Filepath of the project to be packaged, relative to root of repository
+          PROJECT_FILE_PATH: src/Alat.CommandBus.Abstractions/Alat.CommandBus.Abstractions.csproj
+          # API key for the NuGet feed
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}} # optional
+          
