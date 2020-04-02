@@ -16,6 +16,7 @@ jobs:
         with:
           PROJECT_FILE_PATH: src/Alat.Abstractions/Alat.Abstractions.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          TAG_FORMAT: Abstractions.* 
           
       # Publish Alat.CommandBus
       - name: Publish Alat.CommandBus
@@ -23,6 +24,7 @@ jobs:
         with:
           PROJECT_FILE_PATH: src/Alat.CommandBus/Alat.CommandBus.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          TAG_FORMAT: CommandBus.* 
       
       # Publish Alat.CommandBus.Abstractions
       - name: Publish Alat.CommandBus.Abstractions
@@ -30,6 +32,7 @@ jobs:
         with:
           PROJECT_FILE_PATH: src/Alat.CommandBus.Abstractions/Alat.CommandBus.Abstractions.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          TAG_FORMAT: CommandBus.Abstractions.* 
           
       # Publish Alat.Infrastructure
       - name: Publish Alat.Infrastructure
@@ -37,6 +40,7 @@ jobs:
         with:
           PROJECT_FILE_PATH: src/Alat.Infrastructure/Alat.Infrastructure.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          TAG_FORMAT: Infrastructure.* 
           
       # Publish Alat.Utils
       - name: Publish Alat.Utils
@@ -44,4 +48,5 @@ jobs:
         with:
           PROJECT_FILE_PATH: src/Alat.Utils/Alat.Utils.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          TAG_FORMAT: Utils.* 
           
