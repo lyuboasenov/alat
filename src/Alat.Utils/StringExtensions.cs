@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Alat.PSSp.Functionality.Utils {
    public static class StringExtensions {
@@ -130,6 +131,16 @@ namespace Alat.PSSp.Functionality.Utils {
          }
 
          return sb.ToString().RemoveTraillingNewLine();
+      }
+
+      public static string NormalizeLineEndings(this string self) {
+         string result = null;
+
+         if (self != null) {
+            result = Regex.Replace(self, @"\r\n|\n\r|\n|\r", Environment.NewLine);
+         }
+
+         return result;
       }
    }
 }
