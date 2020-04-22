@@ -5,10 +5,16 @@ using System.Reflection;
 namespace Alat.Utils {
    public static class ObjectExtensions {
       private static readonly System.Type _ienumerableType = typeof(IEnumerable);
-      public static int GetHashCode(this object self) {
+      public static int GetReflectionHashCode(this object self) {
          var hash = 0;
          if (self != null) {
-            foreach (var property in self.GetType().GetProperties()) {
+            foreach (var property in self.
+               GetType().
+               GetProperties(BindingFlags.Public
+                  | BindingFlags.NonPublic
+                  | BindingFlags.Instance
+                  | BindingFlags.DeclaredOnly).
+               Where(p => p.CanRead && (!p.GetIndexParameters()?.Any() ?? true))) {
                hash ^= property.GetValue(self)?.GetHashCode() ?? 0;
             }
          }
